@@ -1,13 +1,3 @@
-# React E-Commerce WebApp
-
-**THIS IS A WORK IN PROGRESS**  
-It is currently functional, but products and admin panel have not been implemented.  
-Also it looks terrible.
-
-Documentation is also WIP
-
----
-
 ## Overview
 
 A React + Firebase eCommerce web app developed as the final project for the **Front-End Specialization** at Coding Temple.
@@ -21,8 +11,8 @@ A React + Firebase eCommerce web app developed as the final project for the **Fr
 - ✅ Product display (fetched from Firestore)
 - ✅ Shopping cart with Redux
 - ✅ React Query for caching and async handling
-- ⏳ Admin panel for products (WIP)
-- ⏳ Checkout and Order History (WIP)
+- ✅ Admin panel for products
+- ✅ Checkout and Order History
 
 ---
 
@@ -44,23 +34,12 @@ A React + Firebase eCommerce web app developed as the final project for the **Fr
    export const auth = getAuth(app);
    export const db = getFirestore(app);
 
-
-# TODO (Firebase Migration & Admin Features)
-## Product Management (Admin Panel)
-- Migrate products from FakeStore API to Firestore ✅ COMPLETE
-- Create products collection in Firestore ✅ COMPLETE
-- Read: Display products from Firestore ✅ COMPLETE
-- Create new products 
-- Delete products
-
-## Order Management
-- Save user cart as an order on checkout
-- Store order details: user, items, total, date
-- Create order history page
-- List previous orders by date and total
-- View full details of each past order
+## Some queries may require Firestore composite indexes.
+## If you encounter errors, check the Firebase/Browser Console and set up the required indexes.
 
 
-## Final Steps
+
+
+## To-Do
 - Consolidate css and make it pretty
 - Thorough comments and documentation
