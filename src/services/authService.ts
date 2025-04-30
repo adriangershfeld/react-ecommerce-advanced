@@ -4,8 +4,7 @@ import {
     signOut, 
     UserCredential,
     updateProfile,
-    User
-  } from 'firebase/auth';
+  } from 'firebase/auth'; // removed user import
   import { doc, setDoc, getDoc, updateDoc, deleteDoc } from 'firebase/firestore';
   import { auth, db } from '../firebaseConfig';
   

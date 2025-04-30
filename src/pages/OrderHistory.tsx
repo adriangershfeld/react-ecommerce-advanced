@@ -1,7 +1,7 @@
 // src/pages/OrderHistory.tsx
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { getUserOrders, getOrderById, Order } from '../services/orderService';
+import { getUserOrders, getOrderById } from '../services/orderService';
 import { useAuth } from '../hooks/useAuth';
 import './OrderHistory.css';
 

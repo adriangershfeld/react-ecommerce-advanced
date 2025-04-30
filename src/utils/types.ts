@@ -7,6 +7,7 @@ export interface Product {
     description: string;
     category: string;
     image: string;
+    isAdmin: boolean;
     rating?: {
       rate: number;
       count: number;

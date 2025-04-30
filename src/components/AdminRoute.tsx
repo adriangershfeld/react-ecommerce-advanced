@@ -1,8 +1,7 @@
 // src/components/AdminRoute.tsx
 import React, { ReactNode } from 'react';
 import { Navigate } from 'react-router-dom';
-import { useAuthContext } from '../contexts/AuthContext';
-import { UserData } from '../utils/userTypes';
+import { useAuthContext } from '../contexts/AuthContext'; // Removed unused UserData import
 
 interface AdminRouteProps {
   children: ReactNode;

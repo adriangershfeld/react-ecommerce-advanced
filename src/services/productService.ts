@@ -9,8 +9,7 @@ import {
   deleteDoc,
   query,
   where,
-  orderBy
-} from 'firebase/firestore';
+} from 'firebase/firestore'; // removed orderBy import
 import { db } from '../firebaseConfig';
 import { Product } from '../utils/types';
 

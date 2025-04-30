@@ -2,8 +2,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAuthContext } from '../contexts/AuthContext';
-import { logoutUser } from '../services/authService';
-import { UserData } from '../utils/userTypes';
+import { logoutUser } from '../services/authService'; // Removed unused UserData import
 
 const Navigation: React.FC = () => {
   const { user, userData, loading } = useAuthContext();
