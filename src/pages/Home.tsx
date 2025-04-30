@@ -2,65 +2,59 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useDispatch } from 'react-redux';
-import { addToCart, Product } from '../store.ts';
-import { getAllProducts, getProductsByCategory, getAllCategories, migrateProductsFromAPI } from '../services/productService';
+import { addToCart } from '../store';
+import { getProductsByCategory, getAllCategories, migrateProductsFromAPI } from '../services/productService';
+import { Product } from '../utils/types';
 import './Home.css';
 
-/**
- * Home Component - Main product listing page with category filtering
- * Uses React Query for data fetching and caching
- */
 const Home: React.FC = () => {
-  // State for tracking selected category filter
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const dispatch = useDispatch();
 
-  // Run migration once on component mount
   useEffect(() => {
     migrateProductsFromAPI().catch(console.error);
   }, []);
 
-  // Query to fetch and cache categories - updated for Firestore
   const { data: categories } = useQuery({
     queryKey: ['categories'],
     queryFn: getAllCategories
   });
 
-  // Query to fetch products based on selected category - updated for Firestore
   const {
     data: products,
     isLoading,
     error
-  } = useQuery<Product[], Error>({
+  } = useQuery<Product[]>({
     queryKey: ['products', selectedCategory],
     queryFn: () => getProductsByCategory(selectedCategory)
   });
 
-  /**
-   * Handles adding a product to the cart
-   * Dispatches Redux action with product data
-   */
   const handleAddToCart = (product: Product) => {
-    dispatch(addToCart(product));
+    dispatch(addToCart({
+      id: product.id,
+      title: product.title,
+      price: product.price,
+      image: product.image,
+      category: product.category,
+      description: product.description,
+      rating: product.rating
+    }));
   };
 
-  // Loading state display
   if (isLoading) return (
     <div style={{ padding: '20px', backgroundColor: 'white', color: 'black' }}>
       Loading products...
     </div>
   );
 
-  // Error state display
   if (error) return (
     <div style={{ padding: '20px', backgroundColor: 'white', color: 'black' }}>
-      Error loading products: {error.message}
+      Error loading products: {(error as Error).message}
     </div>
   );
 
   return (
     <div style={{ padding: '20px', backgroundColor: 'white', color: 'black' }}>
-      {/* Category dropdown filter */}
       <select
         value={selectedCategory}
         onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
@@ -74,21 +68,19 @@ const Home: React.FC = () => {
         }}
       >
         <option value="">All Categories</option>
-        {categories?.map((category) => (
+        {categories?.map((category: string) => (
           <option key={category} value={category}>
             {category}
           </option>
         ))}
       </select>
 
-      {/* Product grid - responsive layout with auto-sizing columns */}
       <div style={{
         display: 'grid',
         gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
         gap: '20px'
       }}>
-        {/* Map through products and render product cards */}
-        {products?.map((product) => (
+        {products?.map((product: Product) => (
           <div
             key={product.id}
             style={{
@@ -97,7 +89,6 @@ const Home: React.FC = () => {
               textAlign: 'center'
             }}
           >
-            {/* Product image with fallback for broken images */}
             <img
               src={product.image}
               alt={product.title}
@@ -112,8 +103,7 @@ const Home: React.FC = () => {
               }}
             />
             <h3>{product.title}</h3>
-            <p>${product.price}</p>
-            {/* Added product details */}
+            <p>${product.price.toFixed(2)}</p>
             {product.description && (
               <p style={{ fontSize: '0.9rem', color: '#666', margin: '8px 0' }}>
                 {product.description.slice(0, 128)}...
@@ -124,7 +114,6 @@ const Home: React.FC = () => {
                 Rating: {product.rating.rate}/5 ({product.rating.count} reviews)
               </p>
             )}
-            {/* Add to cart button - dispatches Redux action */}
             <button
               onClick={() => handleAddToCart(product)}
               className="add-to-cart-btn"

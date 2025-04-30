@@ -2,6 +2,7 @@
 import React, { ReactNode } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuthContext } from '../contexts/AuthContext';
+import { UserData } from '../utils/userTypes';
 
 interface AdminRouteProps {
   children: ReactNode;

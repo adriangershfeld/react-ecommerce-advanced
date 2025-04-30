@@ -1,7 +1,7 @@
 // src/components/admin/AdminOrders.tsx
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { getAllOrders, Order } from '../../services/orderService';
+import { getAllOrders } from '../../services/orderService';
 import './AdminOrders.css';
 
 const AdminOrders: React.FC = () => {

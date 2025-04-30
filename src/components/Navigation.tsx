@@ -3,6 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAuthContext } from '../contexts/AuthContext';
 import { logoutUser } from '../services/authService';
+import { UserData } from '../utils/userTypes';
 
 const Navigation: React.FC = () => {
   const { user, userData, loading } = useAuthContext();
