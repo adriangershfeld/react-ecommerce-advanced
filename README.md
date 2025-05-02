@@ -1,6 +1,7 @@
 ## Overview
 
 A React + Firebase eCommerce web app developed as the final project for the **Front-End Specialization** at Coding Temple.
+
 Live at https://react-ecommerce-advanced.vercel.app/ !
 
 ---
