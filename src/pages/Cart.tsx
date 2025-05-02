@@ -34,13 +34,13 @@ const Cart: React.FC = () => {
   if (cartItems.length === 0) {
     return (
       <div className="cart-empty">
-        <h2>Shopping Cart</h2>
-        <p>Your cart is empty</p>
+        <h2>Your Cart</h2>
+        <p>You haven’t added anything yet.</p>
         <button 
           onClick={() => navigate('/')}
           className="continue-shopping-btn"
         >
-          Continue Shopping
+          Browse Products
         </button>
       </div>
     );
@@ -48,7 +48,7 @@ const Cart: React.FC = () => {
 
   return ( 
     <div className="cart-container">
-      <h2>Shopping Cart</h2>
+      <h2>Your Cart</h2>
       {/* Map through and render each cart item */}
       {cartItems.map((item: CartItem) => (
         <div key={item.id} className="cart-item">
@@ -66,7 +66,7 @@ const Cart: React.FC = () => {
             <h3>{item.title}</h3>
              {/* Quantity Selector */}
             <div className="quantity-control">
-              <label>Quantity: </label>
+              <label>Qty: </label>
               <select
                 value={item.quantity}
                 onChange={(e) => dispatch(updateQuantity({
@@ -81,13 +81,13 @@ const Cart: React.FC = () => {
               </select> 
             </div>
             {/* Price Calculation */}
-            <p>Price: ${(item.price * item.quantity).toFixed(2)}</p>
+            <p>Subtotal: ${(item.price * item.quantity).toFixed(2)}</p>
             {/* Remove item button (removeFromCart action) */}
             <button
               onClick={() => dispatch(removeFromCart(item.id))}
               className="remove-btn"
             >
-              Remove
+              Delete Item
             </button>
           </div>
         </div>
@@ -95,20 +95,20 @@ const Cart: React.FC = () => {
 
       {/* Cart summary and checkout section */}
       <div className="cart-summary">
-        <h3>Total Items: {cartItems.reduce((total, item) => total + item.quantity, 0)}</h3>
-        <h3>Total Price: ${totalPrice.toFixed(2)}</h3>
+        <h3>Items Total: {cartItems.reduce((total, item) => total + item.quantity, 0)}</h3>
+        <h3>Order Total: ${totalPrice.toFixed(2)}</h3>
         <div className="cart-actions">
           <button
             onClick={() => navigate('/')}
             className="continue-shopping-btn"
           >
-            Continue Shopping
+            Keep Shopping
           </button>
           <button
             onClick={handleCheckout}
             className="checkout-btn"
           >
-            Proceed to Checkout
+            Checkout Now
           </button>
         </div>
       </div>
