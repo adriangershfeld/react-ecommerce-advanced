@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { User, onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../firebaseConfig';
 import { getUserData } from '../services/authService';
-import { UserData } from '../utils/userTypes'; // Import from utils/userTypes, not from authService
+import { UserData } from '../utils/userTypes';
 
 interface AuthState {
   user: User | null;
@@ -20,15 +20,22 @@ export const useAuth = () => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
-        // User is signed in
-        const userData = await getUserData(user.uid);
-        setAuthState({
-          user,
-          userData,
-          loading: false,
-        });
+        try {
+          const userData = await getUserData(user.uid);
+          setAuthState({
+            user,
+            userData,
+            loading: false,
+          });
+        } catch (error) {
+          console.error('Failed to fetch user data:', error);
+          setAuthState({
+            user,
+            userData: null,
+            loading: false,
+          });
+        }
       } else {
-        // User is signed out
         setAuthState({
           user: null,
           userData: null,
@@ -37,9 +44,10 @@ export const useAuth = () => {
       }
     });
 
-    // Cleanup subscription on unmount
     return () => unsubscribe();
   }, []);
 
   return authState;
 };
+
+// try/catch block fixes infinite loading if userData fetch fails (e.g. 404 on first login)
