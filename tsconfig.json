@@ -7,8 +7,10 @@
     "strict": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "target": "es6",
-    "module": "esnext"
+    "target": "esnext",  // Targeting esnext to avoid issues with import.meta
+    "module": "esnext",  // Ensure that the module system is compatible with import.meta
+    "resolveJsonModule": true,
+    "isolatedModules": true
   },
   "include": ["src"],
   "exclude": ["node_modules"],
