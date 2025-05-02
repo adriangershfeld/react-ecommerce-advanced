@@ -6,7 +6,7 @@ import {
   removeFromCart, 
   updateQuantity, 
   CartItem 
-} from '../store.ts';
+} from '../store';
 import './styles/Cart.css';
 
 /**
