@@ -10,13 +10,11 @@ module.exports = {
   },
   testMatch: ['**/*.test.ts?(x)'],
   transformIgnorePatterns: [
-    // Add exceptions for ESM modules
-    'node_modules/(?!(firebase|@firebase)/)'
+    'node_modules/(?!(firebase|@firebase)/)', // allow ESM Firebase modules to be transformed
   ],
   globals: {
     'ts-jest': {
-      tsconfig: 'tsconfig.json',
-      useESM: true,
-    }
-  }
+      tsconfig: './tsconfig.json',
+    },
+  },
 };
