@@ -1,16 +1,29 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
+import { User } from 'firebase/auth';
 import { store } from '../store';
 import Checkout from './Checkout';
 import { clearCart } from '../store';
 import { createOrder, Order } from '../services/orderService';
 import { useAuth } from '../hooks/useAuth';
 import '@testing-library/jest-dom';
-import { User } from 'firebase/auth';
 import { UserData } from '../utils/userTypes';
 
-// Mock dependencies
+// Mock Firebase modules to prevent ESM issues
+jest.mock('firebase/auth', () => ({
+  getAuth: jest.fn(),
+  onAuthStateChanged: jest.fn(),
+  signOut: jest.fn(),
+}));
+
+jest.mock('firebase/firestore', () => ({
+  getFirestore: jest.fn(),
+  collection: jest.fn(),
+  addDoc: jest.fn(() => Promise.resolve({ id: 'ORDER123' })),
+}));
+
+// Mock services and hooks with proper typing
 jest.mock('../services/orderService', () => ({
   createOrder: jest.fn(),
 }));
@@ -28,6 +41,7 @@ describe('Checkout Component', () => {
     uid: 'test-user-id',
     email: 'test@example.com',
     emailVerified: true,
+    displayName: 'Test User',
     isAnonymous: false,
     metadata: {},
     providerData: [],
@@ -35,32 +49,44 @@ describe('Checkout Component', () => {
     tenantId: null,
     delete: jest.fn(),
     getIdToken: jest.fn(),
-    getIdTokenResult: jest.fn(),
+    getIdTokenResult: jest.fn(() => Promise.resolve({ 
+      token: 'mock-token',
+      expirationTime: '0',
+      issuedAtTime: '0',
+      authTime: '0',
+      signInProvider: 'password',
+      claims: {},
+    })),
     reload: jest.fn(),
     toJSON: jest.fn(),
-    displayName: 'Test User',
     phoneNumber: null,
     photoURL: null,
     providerId: 'password',
   } as unknown as User;
 
-  // Mock user data according to your UserData type
+  // Mock user data according to UserData type
   const mockUserData: UserData = {
     uid: 'test-user-id',
     email: 'test@example.com',
     isAdmin: false,
   };
 
-  // Mock cart item matching your store's CartItem type
+  // Complete CartItem mock with all Product properties
   const mockCartItem = {
     id: '1',
     title: 'Test Product',
     price: 10,
+    image: '/test-image.jpg',
     quantity: 1,
-    image: ''
+    category: 'test-category',
+    description: 'Test description',
+    rating: {
+      rate: 4.5,
+      count: 100
+    }
   };
 
-  // Mock order response matching your Order interface
+  // Complete Order mock matching Order interface
   const mockOrder: Order = {
     id: 'ORDER123',
     userId: 'test-user-id',
@@ -80,8 +106,13 @@ describe('Checkout Component', () => {
       loading: false
     });
 
-    // Mock order creation response
+    // Mock order service with proper Order type
     mockCreateOrder.mockResolvedValue(mockOrder);
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+    store.dispatch(clearCart());
   });
 
   test('renders checkout with cart items', () => {
@@ -98,12 +129,26 @@ describe('Checkout Component', () => {
       </Provider>
     );
 
+    // Check main elements
     expect(screen.getByText('Checkout')).toBeInTheDocument();
     expect(screen.getByText('Test Product')).toBeInTheDocument();
     expect(screen.getByText('$10.00')).toBeInTheDocument();
+    expect(screen.getByText('Total: $10.00')).toBeInTheDocument();
   });
 
-  test('displays error if user is not logged in', async () => {
+  test('shows empty cart message when no items', () => {
+    render(
+      <Provider store={store}>
+        <Router>
+          <Checkout />
+        </Router>
+      </Provider>
+    );
+
+    expect(screen.getByText(/your cart is empty/i)).toBeInTheDocument();
+  });
+
+  test('displays auth error when unauthenticated', async () => {
     mockUseAuth.mockReturnValue({ 
       user: null,
       userData: null,
@@ -119,12 +164,13 @@ describe('Checkout Component', () => {
     );
 
     fireEvent.click(screen.getByText('Place Order'));
+    
     await waitFor(() => {
       expect(screen.getByText(/logged in/i)).toBeInTheDocument();
     });
   });
 
-  test('successfully submits the order and clears the cart', async () => {
+  test('successful order submission flow', async () => {
     store.dispatch({
       type: 'cart/addToCart',
       payload: mockCartItem
@@ -140,13 +186,40 @@ describe('Checkout Component', () => {
 
     fireEvent.click(screen.getByText('Place Order'));
 
+    // Check loading state
+    expect(screen.getByText('Processing...')).toBeInTheDocument();
+
     await waitFor(() => {
+      // Verify order creation
       expect(mockCreateOrder).toHaveBeenCalledWith(
         'test-user-id',
         [mockCartItem],
         10
       );
+      
+      // Check cart clearance
       expect(store.getState().cart.items).toHaveLength(0);
+      
+      // Verify success state
+      expect(screen.queryByText('Processing...')).not.toBeInTheDocument();
+    });
+  });
+
+  test('shows error for empty cart submission', async () => {
+    store.dispatch(clearCart());
+    
+    render(
+      <Provider store={store}>
+        <Router>
+          <Checkout />
+        </Router>
+      </Provider>
+    );
+
+    fireEvent.click(screen.getByText('Place Order'));
+    
+    await waitFor(() => {
+      expect(screen.getByText(/cart is empty/i)).toBeInTheDocument();
     });
   });
 });

@@ -1,8 +1,7 @@
-// jest.config.cjs
 module.exports = {
   preset: 'ts-jest',
-  testEnvironment: 'jest-environment-jsdom', // Updated to full package name
-  setupFilesAfterEnv: ['<rootDir>/jest.setup.js'], // Add this line
+  testEnvironment: 'jsdom',
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
   moduleNameMapper: {
     '\\.(css|less|scss)$': 'identity-obj-proxy',
   },
@@ -10,14 +9,14 @@ module.exports = {
     '^.+\\.(ts|tsx)$': 'ts-jest',
   },
   testMatch: ['**/*.test.ts?(x)'],
+  transformIgnorePatterns: [
+    // Add exceptions for ESM modules
+    'node_modules/(?!(firebase|@firebase)/)'
+  ],
   globals: {
     'ts-jest': {
-      // Required for Firebase compatibility
-      diagnostics: false,
-    },
-  },
-  // Add these node polyfills
-  testEnvironmentOptions: {
-    customExportConditions: [''],
-  },
+      tsconfig: 'tsconfig.json',
+      useESM: true,
+    }
+  }
 };
