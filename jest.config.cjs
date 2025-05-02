@@ -1,4 +1,4 @@
-// Create this file in your project root
+// jest.config.cjs
 module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'jsdom',
@@ -11,5 +11,5 @@ module.exports = {
   testMatch: [
     '**/*.test.ts?(x)'
   ],
-  setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.cjs']
 };
