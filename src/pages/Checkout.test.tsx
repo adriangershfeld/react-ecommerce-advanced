@@ -9,7 +9,6 @@ import { createOrder, Order } from '../services/orderService';
 import { useAuth } from '../hooks/useAuth';
 import '@testing-library/jest-dom';
 import { UserData } from '../utils/userTypes';
-import { act } from 'react';
 
 // Mock Firebase modules to prevent ESM issues
 jest.mock('firebase/auth', () => ({
@@ -50,14 +49,16 @@ describe('Checkout Component', () => {
     tenantId: null,
     delete: jest.fn(),
     getIdToken: jest.fn(),
-    getIdTokenResult: jest.fn(() => Promise.resolve({ 
-      token: 'mock-token',
-      expirationTime: '0',
-      issuedAtTime: '0',
-      authTime: '0',
-      signInProvider: 'password',
-      claims: {},
-    })),
+    getIdTokenResult: jest.fn(() =>
+      Promise.resolve({
+        token: 'mock-token',
+        expirationTime: '0',
+        issuedAtTime: '0',
+        authTime: '0',
+        signInProvider: 'password',
+        claims: {},
+      })
+    ),
     reload: jest.fn(),
     toJSON: jest.fn(),
     phoneNumber: null,
@@ -83,8 +84,8 @@ describe('Checkout Component', () => {
     description: 'Test description',
     rating: {
       rate: 4.5,
-      count: 100
-    }
+      count: 100,
+    },
   };
 
   // Complete Order mock matching Order interface
@@ -94,20 +95,17 @@ describe('Checkout Component', () => {
     items: [mockCartItem],
     totalAmount: 10,
     createdAt: new Date(),
-    status: 'completed'
+    status: 'completed',
   };
 
   beforeEach(() => {
-    // Wrap store.dispatch(clearCart()) in act()
-    act(() => {
-      store.dispatch(clearCart());
-    });
+    store.dispatch(clearCart());
 
     // Mock auth state with all required properties
-    mockUseAuth.mockReturnValue({ 
+    mockUseAuth.mockReturnValue({
       user: mockFirebaseUser,
       userData: mockUserData,
-      loading: false
+      loading: false,
     });
 
     // Mock order service with proper Order type
@@ -116,19 +114,13 @@ describe('Checkout Component', () => {
 
   afterEach(() => {
     jest.clearAllMocks();
-
-    // Wrap store.dispatch(clearCart()) in act() again
-    act(() => {
-      store.dispatch(clearCart());
-    });
+    store.dispatch(clearCart());
   });
 
   test('renders checkout with cart items', async () => {
-    await act(async () => {
-      store.dispatch({
-        type: 'cart/addToCart',
-        payload: mockCartItem
-      });
+    store.dispatch({
+      type: 'cart/addToCart',
+      payload: mockCartItem,
     });
 
     render(
@@ -146,7 +138,7 @@ describe('Checkout Component', () => {
     expect(screen.getByText('Total: $10.00')).toBeInTheDocument();
   });
 
-  test('shows empty cart message when no items', () => {
+  test('shows empty cart message when no items', async () => {
     render(
       <Provider store={store}>
         <Router>
@@ -159,10 +151,10 @@ describe('Checkout Component', () => {
   });
 
   test('displays auth error when unauthenticated', async () => {
-    mockUseAuth.mockReturnValue({ 
+    mockUseAuth.mockReturnValue({
       user: null,
       userData: null,
-      loading: false
+      loading: false,
     });
 
     render(
@@ -173,19 +165,17 @@ describe('Checkout Component', () => {
       </Provider>
     );
 
-    fireEvent.click(screen.getByText('Place Order'));
-    
+    fireEvent.click(await screen.findByText(/place order/i)); // Use findByText for async
+
     await waitFor(() => {
       expect(screen.getByText(/logged in/i)).toBeInTheDocument();
     });
   });
 
   test('successful order submission flow', async () => {
-    await act(async () => {
-      store.dispatch({
-        type: 'cart/addToCart',
-        payload: mockCartItem
-      });
+    store.dispatch({
+      type: 'cart/addToCart',
+      payload: mockCartItem,
     });
 
     render(
@@ -196,7 +186,9 @@ describe('Checkout Component', () => {
       </Provider>
     );
 
-    fireEvent.click(screen.getByText('Place Order'));
+    // Wait for the "Place Order" button to appear and click it
+    const placeOrderButton = await screen.findByText(/place order/i); // Use findByText for async
+    fireEvent.click(placeOrderButton);
 
     // Check loading state
     expect(screen.getByText('Processing...')).toBeInTheDocument();
@@ -208,20 +200,18 @@ describe('Checkout Component', () => {
         [mockCartItem],
         10
       );
-      
+
       // Check cart clearance
       expect(store.getState().cart.items).toHaveLength(0);
-      
+
       // Verify success state
       expect(screen.queryByText('Processing...')).not.toBeInTheDocument();
     });
   });
 
   test('shows error for empty cart submission', async () => {
-    act(() => {
-      store.dispatch(clearCart());
-    });
-    
+    store.dispatch(clearCart());
+
     render(
       <Provider store={store}>
         <Router>
@@ -230,8 +220,8 @@ describe('Checkout Component', () => {
       </Provider>
     );
 
-    fireEvent.click(screen.getByText('Place Order'));
-    
+    fireEvent.click(await screen.findByText(/place order/i)); // Use findByText for async
+
     await waitFor(() => {
       expect(screen.getByText(/cart is empty/i)).toBeInTheDocument();
     });
