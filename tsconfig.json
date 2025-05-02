@@ -10,7 +10,10 @@
     "target": "esnext",  // Targeting esnext to avoid issues with import.meta
     "module": "esnext",  // Ensure that the module system is compatible with import.meta
     "resolveJsonModule": true,
-    "isolatedModules": true
+    "isolatedModules": true,
+    "noEmit": false,  // Allow emitting output files
+    "declaration": true,  // Enable .d.ts generation
+    "declarationDir": "./dist/types"  // Optional: specify a custom directory for .d.ts files
   },
   "include": ["src"],
   "exclude": ["node_modules"],
