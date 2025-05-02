@@ -8,8 +8,13 @@ module.exports = {
   transform: {
     '^.+\\.(ts|tsx)$': 'ts-jest',
   },
-  testMatch: [
-    '**/*.test.ts?(x)'
-  ],
-  setupFilesAfterEnv: ['<rootDir>/jest.setup.cjs']
+  testMatch: ['**/*.test.ts?(x)'],
+  // Remove any ESM-related flags
+  extensionsToTreatAsEsm: [],
+  globals: {
+    'ts-jest': {
+      // Disable ESM handling in ts-jest
+      useESM: false,
+    },
+  },
 };
