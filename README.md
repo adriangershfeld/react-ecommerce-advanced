@@ -1,6 +1,7 @@
 ## Overview
 
 A React + Firebase eCommerce web app developed as the final project for the **Front-End Specialization** at Coding Temple.
+Live at https://react-ecommerce-advanced.vercel.app/ !
 
 ---
 
@@ -34,12 +35,9 @@ A React + Firebase eCommerce web app developed as the final project for the **Fr
    export const auth = getAuth(app);
    export const db = getFirestore(app);
 
-## Some queries may require Firestore composite indexes.
-## If you encounter errors, check the Firebase/Browser Console and set up the required indexes.
-
-
+## Some queries may require Firestore indexes. If you encounter errors,
+## check the Firebase/Browser Console and set up the required indexes
 
 
 ## To-Do
-- Consolidate css and make it pretty
 - Thorough comments and documentation
