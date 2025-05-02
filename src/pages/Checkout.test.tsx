@@ -9,7 +9,7 @@ import { createOrder, Order } from '../services/orderService';
 import { useAuth } from '../hooks/useAuth';
 import '@testing-library/jest-dom';
 import { UserData } from '../utils/userTypes';
-import { act } from 'react-dom/test-utils';
+import { act } from 'react';
 
 // Mock Firebase modules to prevent ESM issues
 jest.mock('firebase/auth', () => ({
