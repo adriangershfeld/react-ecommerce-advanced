@@ -1,14 +1,17 @@
 {
   "compilerOptions": {
     "types": ["jest", "@testing-library/jest-dom", "react", "react-dom"],
-    "jsx": "react-jsx",  
+    "jsx": "react-jsx",
     "esModuleInterop": true,
     "moduleResolution": "node",
     "strict": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "target": "es6",
+    "module": "esnext"
   },
-  "files": [],
+  "include": ["src"],
+  "exclude": ["node_modules"],
   "references": [
     { "path": "./tsconfig.app.json" },
     { "path": "./tsconfig.node.json" }
