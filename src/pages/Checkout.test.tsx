@@ -98,7 +98,10 @@ describe('Checkout Component', () => {
   };
 
   beforeEach(() => {
-    store.dispatch(clearCart());
+    // Wrap store.dispatch(clearCart()) in act()
+    act(() => {
+      store.dispatch(clearCart());
+    });
 
     // Mock auth state with all required properties
     mockUseAuth.mockReturnValue({ 
@@ -113,7 +116,11 @@ describe('Checkout Component', () => {
 
   afterEach(() => {
     jest.clearAllMocks();
-    store.dispatch(clearCart());
+
+    // Wrap store.dispatch(clearCart()) in act() again
+    act(() => {
+      store.dispatch(clearCart());
+    });
   });
 
   test('renders checkout with cart items', async () => {
@@ -211,7 +218,9 @@ describe('Checkout Component', () => {
   });
 
   test('shows error for empty cart submission', async () => {
-    store.dispatch(clearCart());
+    act(() => {
+      store.dispatch(clearCart());
+    });
     
     render(
       <Provider store={store}>
