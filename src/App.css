@@ -1,36 +1,20 @@
-/* Product grid layout */
+/* src/App.css */
+
+/* PRODUCT GRID LAYOUT */
 .product-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 20px;
-  }
-  /* Product card styling */
-  .product-card {
-  border-radius: 12px;
-  padding: 15px;
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-  }
-  /* Bold text styling */
-  .product-card p,
-  .product-card h3 {
-  color: black;
+  gap: 1.5rem;
+}
+
+/* TEXT INSIDE PRODUCT CARDS */
+.product-card p,
+.product-card h3 {
+  /* use the theme’s light text color */
+  color: var(--text-light);
   font-weight: bold;
-  }
-  /* Product image */
-  .product-card img {
-  max-width: 100%;
-  height: 200px;
-  object-fit: contain;
-  }
-  /* Button styling */
-  button {
-  padding: 10px 15px;
-  border-radius: 8px;
-  transition: transform 0.3s ease;
-  }
-  /* Hover effect */
-  button {
-  transform: scale(1.05);
-  }
+}
+
+.product-card a,
+.product-card button {
+  color: var(--text-light);
+}

@@ -1,13 +1,15 @@
-/* src/components/admin/AdminOrders.css */
 .admin-orders {
   padding: 20px;
-  max-width: 1200px;
-  margin: 0 auto;
+  background-color: #1a1a1a;
+  color: white;
+  min-height: 100vh;
 }
 
-.admin-orders h2 {
+h2 {
+  text-align: center;
+  font-size: 2rem;
+  color: #d6a6f5; /* Light purple for headings */
   margin-bottom: 20px;
-  color: #333;
 }
 
 .orders-table-container {
@@ -17,102 +19,123 @@
 .orders-table {
   width: 100%;
   border-collapse: collapse;
-  margin-bottom: 20px;
-  background-color: #fff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .orders-table th,
 .orders-table td {
   padding: 12px 15px;
+  border: 1px solid #444;
   text-align: left;
-  border-bottom: 1px solid #ddd;
 }
 
 .orders-table th {
-  background-color: #f5f5f5;
-  font-weight: 600;
+  background-color: #333;
 }
 
-.order-row:hover {
-  background-color: #f9f9f9;
+.orders-table tr:nth-child(even) {
+  background-color: #222; /* Even rows dark */
+}
+
+.orders-table tr:nth-child(odd) {
+  background-color: #333; /* Odd rows dark */
+}
+
+.orders-table tr:hover {
+  background-color: #4a2a8e; /* Purple hover effect */
 }
 
 .status-badge {
-  display: inline-block;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 0.85rem;
-  font-weight: 500;
+  padding: 5px 10px;
+  border-radius: 5px;
+  text-transform: capitalize;
+  font-weight: bold;
 }
 
 .status-pending {
-  background-color: #ffebcd;
-  color: #cd853f;
+  background-color: #ffcc00;
+  color: #000;
 }
 
-.status-completed {
-  background-color: #e6f7e6;
-  color: #2e8b57;
+.status-shipped {
+  background-color: #4caf50;
+  color: white;
 }
 
-.status-cancelled {
-  background-color: #ffeded;
-  color: #dc3545;
+.status-delivered {
+  background-color: #2196f3;
+  color: white;
 }
 
 .view-details-btn {
-  background-color: #007bff;
+  padding: 8px 12px;
+  background-color: #5c3d99;
   color: white;
   border: none;
-  padding: 5px 10px;
-  border-radius: 4px;
+  border-radius: 5px;
   cursor: pointer;
-  font-size: 0.85rem;
-  transition: background-color 0.2s;
+  font-weight: bold;
 }
 
 .view-details-btn:hover {
-  background-color: #0056b3;
+  background-color: #3b2b68;
 }
 
 .order-details-row {
-  background-color: #f8f9fa;
+  background-color: #2c2c2c;
 }
 
 .order-details-content {
-  padding: 15px;
+  padding: 20px;
 }
 
 .order-items-table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 10px;
+  margin-top: 20px;
 }
 
 .order-items-table th,
 .order-items-table td {
-  padding: 8px 10px;
-  text-align: left;
-  border-bottom: 1px solid #eee;
+  padding: 12px 15px;
+  border: 1px solid #444;
 }
 
 .order-items-table th {
-  background-color: #f0f0f0;
-  font-weight: 500;
+  background-color: #333;
+}
+
+.order-items-table tr:nth-child(even) {
+  background-color: #222;
+}
+
+.order-items-table tr:hover {
+  background-color: #4a2a8e;
 }
 
 .product-thumbnail {
   width: 50px;
   height: 50px;
-  object-fit: contain;
+  object-fit: cover;
 }
 
 .total-label {
+  font-weight: bold;
   text-align: right;
-  font-weight: 600;
 }
 
 .total-value {
-  font-weight: 600;
+  font-weight: bold;
+  text-align: left;
+}
+
+.order-row {
+  background-color: #333; /* Default background color for all rows */
+}
+
+.order-row:hover {
+  background-color: #4a2a8e; /* Purple hover effect for order rows */
+}
+
+.order-details-row {
+  background-color: #2c2c2c; /* Darker background for order details row */
 }

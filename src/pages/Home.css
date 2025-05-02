@@ -1,56 +1,197 @@
-/* Home Component Styles */
+/* src/pages/Home.css */
+
+/* PAGE WRAPPER */
 .home-container {
-    padding: 20px;
-    background-color: white;
-    color: black;
-  }
-  
-  .product-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 20px;
-  }
-  
-  .product-card {
-    border: 1px solid #ddd;
-    padding: 15px;
-    text-align: center;
-    border-radius: 8px;
-    transition: all 0.3s ease;
-  }
-  
-  .product-image {
-    max-width: 100%;
-    height: 200px;
-    object-fit: contain;
-    margin-bottom: 15px;
-  }
-  
-  .category-filter {
-    margin-bottom: 20px;
-    padding: 10px;
-    width: 100%;
-    max-width: 300px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-  }
-  
-  .add-to-cart-btn {
-    background-color: #27ae60; /* Green base color */
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    cursor: pointer;
-    border-radius: 8px;
-    transition: all 0.3s ease; /* Fixed transition */
-  }
-  
-  .add-to-cart-btn:hover {
-    transform: scale(1.05);
-    background-color: #219651; /* Darker green hover */
-  }
+  padding: 20px;
+  background-color: var(--bg-dark);
+  color: var(--text-light);
+}
 
+/* CATEGORY FILTER SELECT */
+.category-filter {
+  margin-bottom: 20px;
+  padding: 10px;
+  width: 100%;
+  max-width: 300px;
+  background-color: var(--card-bg);
+  color: var(--text-light);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+}
 
- /* i tried myself and i even tried ai idk why my css wont work... NEVERMIND MISSING IMPORT :P */
+/* PRODUCT GRID LAYOUT */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+}
 
- 
+/* PRODUCT CARD */
+.product-card {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  background-color: var(--card-bg);
+  color: var(--text-light);
+  padding-top: var(--img-height, 200px);
+  max-width: 300px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  box-shadow: 0 0 15px 5px rgba(128, 0, 128, 0.5); /* Persistent purple glow */
+  transition: box-shadow 0.3s ease-in-out; /* Smooth transition for the glow */
+}
+
+/* WHITE BACKDROP BEHIND IMAGE */
+.product-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--img-height, 200px);
+  background-color: white;
+  z-index: 0;
+}
+
+/* PRODUCT IMAGE positioned over backdrop */
+.product-card img {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: auto;
+  height: var(--img-height, 200px);
+  object-fit: contain;
+  z-index: 1;
+}
+
+/* ENSURE TEXT CONTENT SITS BELOW IMAGE BACKDROP */
+.product-card .content {
+  position: relative;
+  z-index: 1;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex-grow: 1;
+  padding-bottom: 60px; /* ensure space for button */
+}
+
+/* PRODUCT TITLE & PRICE */
+.product-card h3,
+.product-card p {
+  margin: 0;
+  color: var(--text-light);
+}
+
+/* DESCRIPTION */
+.product-card .description {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  cursor: help;
+  position: relative;
+}
+
+/* RATING */
+.product-card .rating {
+  font-size: 0.9rem;
+  color: var(--text-light);
+}
+
+/* ADD TO CART BUTTON */
+.add-to-cart-btn {
+  margin-top: auto;
+  background: var(--primary);
+  color: white;
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  align-self: flex-end;
+  position: relative;
+  z-index: 1;
+}
+
+/* Button Hover - Glow Effect */
+.add-to-cart-btn:hover {
+  background: var(--hover-primary);
+  transform: translateY(-1px);
+  box-shadow: 0 0 15px 5px rgba(128, 0, 128, 0.5); /* Purple glow on hover */
+}
+
+/* DESCRIPTION HOVER TOOLTIP */
+.product-card .description:hover::after {
+  content: attr(data-full);
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: 15px;
+  z-index: 10;
+  background-color: var(--card-bg);
+  color: var(--text-light);
+  padding: 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  white-space: pre-wrap;
+  overflow: auto;
+  display: block;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  scrollbar-width: thin;
+  -webkit-overflow-scrolling: touch;
+  max-height: none;
+  height: calc(100% - 30px);
+}
+
+.product-card .description:hover {
+  overflow: visible;
+}
+
+/* NAVBAR STYLES - PURPLE HOVER EFFECT */
+.navigation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background-color: var(--bg-dark);
+  border-bottom: 2px solid var(--border-color);
+}
+
+.navbar-links {
+  display: flex;
+  gap: 20px;
+}
+
+.navbar-links a {
+  color: var(--text-light);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+/* Purple hover effect on navbar links */
+.navbar-links a:hover {
+  color: var(--hover-primary);
+}
+
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  background-color: var(--card-bg);
+  padding: 10px;
+  border-radius: 4px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.dropdown:hover .dropdown-menu {
+  display: block;
+}
+
+/* Prevent dropdown overlap issues */
+.dropdown {
+  position: relative;
+  z-index: 10;
+}

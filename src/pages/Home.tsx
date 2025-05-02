@@ -1,9 +1,12 @@
-// src/pages/Home.tsx
 import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useDispatch } from 'react-redux';
 import { addToCart } from '../store';
-import { getProductsByCategory, getAllCategories, migrateProductsFromAPI } from '../services/productService';
+import {
+  getProductsByCategory,
+  getAllCategories,
+  migrateProductsFromAPI
+} from '../services/productService';
 import { Product } from '../utils/types';
 import './Home.css';
 
@@ -15,7 +18,7 @@ const Home: React.FC = () => {
     migrateProductsFromAPI().catch(console.error);
   }, []);
 
-  const { data: categories } = useQuery({
+  const { data: categories } = useQuery<string[]>({
     queryKey: ['categories'],
     queryFn: getAllCategories
   });
@@ -41,31 +44,26 @@ const Home: React.FC = () => {
     }));
   };
 
-  if (isLoading) return (
-    <div style={{ padding: '20px', backgroundColor: 'white', color: 'black' }}>
-      Loading products...
-    </div>
-  );
+  if (isLoading) {
+    return <div className="home-container">Loading products…</div>;
+  }
 
-  if (error) return (
-    <div style={{ padding: '20px', backgroundColor: 'white', color: 'black' }}>
-      Error loading products: {(error as Error).message}
-    </div>
-  );
+  if (error) {
+    return (
+      <div className="home-container">
+        Error loading products: {(error as Error).message}
+      </div>
+    );
+  }
 
   return (
-    <div style={{ padding: '20px', backgroundColor: 'white', color: 'black' }}>
+    <div className="home-container">
       <select
+        className="category-filter"
         value={selectedCategory}
         onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
           setSelectedCategory(e.target.value)
         }
-        style={{
-          marginBottom: '20px',
-          padding: '10px',
-          width: '100%',
-          maxWidth: '300px'
-        }}
       >
         <option value="">All Categories</option>
         {categories?.map((category: string) => (
@@ -75,45 +73,37 @@ const Home: React.FC = () => {
         ))}
       </select>
 
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
-        gap: '20px'
-      }}>
+      <div className="product-grid">
         {products?.map((product: Product) => (
-          <div
-            key={product.id}
-            style={{
-              border: '1px solid #ddd',
-              padding: '15px',
-              textAlign: 'center'
-            }}
-          >
+          <div key={product.id} className="product-card">
             <img
               src={product.image}
               alt={product.title}
-              style={{
-                maxWidth: '100%',
-                height: '200px',
-                objectFit: 'contain'
-              }}
               onError={(e) => {
                 (e.target as HTMLImageElement).onerror = null;
-                (e.target as HTMLImageElement).src = 'https://via.placeholder.com/200';
+                (e.target as HTMLImageElement).src =
+                  'https://via.placeholder.com/200';
               }}
             />
+
             <h3>{product.title}</h3>
             <p>${product.price.toFixed(2)}</p>
+
             {product.description && (
-              <p style={{ fontSize: '0.9rem', color: '#666', margin: '8px 0' }}>
-                {product.description.slice(0, 128)}...
+              <p
+               className="description"
+               data-full={product.description}
+               >
+                {product.description.slice(0, 128)}…
               </p>
             )}
+
             {product.rating && (
-              <p style={{ fontSize: '0.9rem', color: '#444' }}>
+              <p className="rating">
                 Rating: {product.rating.rate}/5 ({product.rating.count} reviews)
               </p>
             )}
+
             <button
               onClick={() => handleAddToCart(product)}
               className="add-to-cart-btn"
