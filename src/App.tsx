@@ -1,28 +1,26 @@
-// Modify the App.tsx file to add AdminOrders route
-
 import React from 'react';
 import { Provider } from 'react-redux';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { store } from './store.ts';
+import { store } from './store';
 import { AuthProvider } from './contexts/AuthContext';
 
 // Pages
-import Home from './pages/Home.tsx';
-import Cart from './pages/Cart.tsx';
-import Profile from './pages/Profile.tsx';
-import OrderHistory from './pages/OrderHistory.tsx';
-import Checkout from './pages/Checkout.tsx';
+import Home from './pages/Home';
+import Cart from './pages/Cart';
+import Profile from './pages/Profile';
+import OrderHistory from './pages/OrderHistory';
+import Checkout from './pages/Checkout';
 
 // Components
-import Navigation from './components/Navigation.tsx';
+import Navigation from './components/Navigation';
 import Login from './components/auth/Login';
 import Register from './components/auth/Register';
 import PasswordReset from './components/auth/PasswordReset';
-import ProtectedRoute from './components/ProtectedRoute.tsx';
-import AdminProducts from './components/admin/AdminProducts.tsx';
-import AdminOrders from './components/admin/AdminOrders.tsx'; // Import AdminOrders
-import AdminRoute from './components/AdminRoute.tsx';
+import ProtectedRoute from './components/ProtectedRoute';
+import AdminProducts from './components/admin/AdminProducts';
+import AdminOrders from './components/admin/AdminOrders'; // Import AdminOrders
+import AdminRoute from './components/AdminRoute';
 
 import './App.css';
 
