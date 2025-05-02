@@ -6,15 +6,12 @@ module.exports = {
     '\\.(css|less|scss)$': 'identity-obj-proxy',
   },
   transform: {
-    '^.+\\.(ts|tsx)$': 'ts-jest',
+    '^.+\\.(ts|tsx)$': ['ts-jest', {
+      tsconfig: './tsconfig.json',
+    }],
   },
   testMatch: ['**/*.test.ts?(x)'],
   transformIgnorePatterns: [
-    'node_modules/(?!(firebase|@firebase)/)', // allow ESM Firebase modules to be transformed
+    'node_modules/(?!(firebase|@firebase)/)',
   ],
-  globals: {
-    'ts-jest': {
-      tsconfig: './tsconfig.json',
-    },
-  },
 };
