@@ -1,6 +1,12 @@
 {
   "compilerOptions": {
-    "types": ["jest", "@testing-library/jest-dom"]
+    "types": ["jest", "@testing-library/jest-dom", "react", "react-dom"],
+    "jsx": "react-jsx",  // Ensure you're using the new JSX transform (React 17+)
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "strict": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
   },
   "files": [],
   "references": [
