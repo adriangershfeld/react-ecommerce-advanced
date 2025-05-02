@@ -25,20 +25,25 @@ const Profile: React.FC = () => {
 
   const handleUpdateProfile = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user) return;
+    if (!user || !userData) return;
     
     setError(null);
     setMessage(null);
     setLoading(true);
     
     try {
+      // Important: Only update the fields that the user can change
+      // Preserve the isAdmin field by not including it in the update
       await updateUserData(user.uid, {
         displayName,
         address,
-        phoneNumber
+        phoneNumber,
+        // Preserve the isAdmin status from the existing userData
+        isAdmin: userData.isAdmin
       });
       setMessage('Profile updated successfully');
     } catch (err: any) {
+      console.error('Profile update error:', err);
       setError(err.message || 'Failed to update profile');
     } finally {
       setLoading(false);
@@ -61,7 +66,7 @@ const Profile: React.FC = () => {
   };
 
   if (!user || !userData) {
-    return <div>Loading profile...</div>;
+    return <div className="loading-container">Loading profile...</div>;
   }
 
   return (

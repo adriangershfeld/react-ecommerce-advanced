@@ -62,12 +62,17 @@ const convertDocToOrder = (doc: DocumentData): Order => {
     items: data.items,
     totalAmount: data.totalAmount,
     status: data.status,
-    createdAt: data.createdAt.toDate()
+    createdAt: data.createdAt instanceof Timestamp ? data.createdAt.toDate() : data.createdAt
   };
 };
 
 // Get all orders for a specific user
 export const getUserOrders = async (userId: string): Promise<Order[]> => {
+  if (!userId) {
+    console.error("getUserOrders called with no userId");
+    return [];
+  }
+  
   try {
     const q = query(
       ordersCollection, 
@@ -79,7 +84,8 @@ export const getUserOrders = async (userId: string): Promise<Order[]> => {
     return querySnapshot.docs.map(convertDocToOrder);
   } catch (error) {
     console.error(`Error fetching orders for user ${userId}:`, error);
-    throw error;
+    // Return empty array instead of throwing to provide graceful degradation
+    return [];
   }
 };
 
@@ -94,7 +100,7 @@ export const getOrderById = async (orderId: string): Promise<Order | null> => {
     return null;
   } catch (error) {
     console.error(`Error fetching order with ID ${orderId}:`, error);
-    throw error;
+    return null;
   }
 };
 
@@ -108,6 +114,7 @@ export const getAllOrders = async (): Promise<Order[]> => {
     return querySnapshot.docs.map(convertDocToOrder);
   } catch (error) {
     console.error('Error fetching all orders:', error);
-    throw error;
+    // Return empty array instead of throwing
+    return [];
   }
 };
