@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { User, onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../firebaseConfig';
-import { getUserData, UserData } from '../services/authService';
+import { getUserData } from '../services/authService';
+import { UserData } from '../utils/userTypes'; // Import from utils/userTypes, not from authService
 
 interface AuthState {
   user: User | null;

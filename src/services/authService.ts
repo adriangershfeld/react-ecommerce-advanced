@@ -4,7 +4,6 @@ import {
   signOut, 
   UserCredential,
   updateProfile,
-  User
 } from 'firebase/auth';
 import { doc, setDoc, getDoc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { auth, db } from '../firebaseConfig';
@@ -33,7 +32,7 @@ export const registerUser = async (
       uid: user.uid,
       email: user.email || email,
       displayName: displayName || undefined,
-      // Removed default empty strings for optional fields
+      isAdmin: false, // Ensure this is always included
     };
 
     await setDoc(doc(db, 'users', user.uid), userData);
