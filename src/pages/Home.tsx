@@ -8,7 +8,7 @@ import {
   migrateProductsFromAPI
 } from '../services/productService';
 import { Product } from '../utils/types';
-import './Home.css';
+import './styles/Home.css';
 
 const Home: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('');

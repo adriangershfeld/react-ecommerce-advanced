@@ -7,7 +7,7 @@ import {
   updateQuantity, 
   CartItem 
 } from '../store.ts';
-import './Cart.css';
+import './styles/Cart.css';
 
 /**
  * Cart Component - Displays the user's shopping cart and handles cart interactions
