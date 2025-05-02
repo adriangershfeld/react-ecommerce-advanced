@@ -9,6 +9,7 @@ import { createOrder, Order } from '../services/orderService';
 import { useAuth } from '../hooks/useAuth';
 import '@testing-library/jest-dom';
 import { UserData } from '../utils/userTypes';
+import { act } from 'react-dom/test-utils';
 
 // Mock Firebase modules to prevent ESM issues
 jest.mock('firebase/auth', () => ({
@@ -98,7 +99,7 @@ describe('Checkout Component', () => {
 
   beforeEach(() => {
     store.dispatch(clearCart());
-    
+
     // Mock auth state with all required properties
     mockUseAuth.mockReturnValue({ 
       user: mockFirebaseUser,
@@ -115,10 +116,12 @@ describe('Checkout Component', () => {
     store.dispatch(clearCart());
   });
 
-  test('renders checkout with cart items', () => {
-    store.dispatch({
-      type: 'cart/addToCart',
-      payload: mockCartItem
+  test('renders checkout with cart items', async () => {
+    await act(async () => {
+      store.dispatch({
+        type: 'cart/addToCart',
+        payload: mockCartItem
+      });
     });
 
     render(
@@ -171,9 +174,11 @@ describe('Checkout Component', () => {
   });
 
   test('successful order submission flow', async () => {
-    store.dispatch({
-      type: 'cart/addToCart',
-      payload: mockCartItem
+    await act(async () => {
+      store.dispatch({
+        type: 'cart/addToCart',
+        payload: mockCartItem
+      });
     });
 
     render(
