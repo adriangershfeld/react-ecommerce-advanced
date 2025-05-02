@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { User } from 'firebase/auth';
@@ -165,7 +165,10 @@ describe('Checkout Component', () => {
       </Provider>
     );
 
-    fireEvent.click(await screen.findByText(/place order/i)); // Use findByText for async
+    // Use findByText with act to handle async behavior
+    await act(async () => {
+      fireEvent.click(await screen.findByText(/place order/i));
+    });
 
     await waitFor(() => {
       expect(screen.getByText(/logged in/i)).toBeInTheDocument();
@@ -187,8 +190,11 @@ describe('Checkout Component', () => {
     );
 
     // Wait for the "Place Order" button to appear and click it
-    const placeOrderButton = await screen.findByText(/place order/i); // Use findByText for async
-    fireEvent.click(placeOrderButton);
+    const placeOrderButton = await screen.findByText(/place order/i);
+    
+    await act(async () => {
+      fireEvent.click(placeOrderButton);
+    });
 
     // Check loading state
     expect(screen.getByText('Processing...')).toBeInTheDocument();
@@ -220,7 +226,9 @@ describe('Checkout Component', () => {
       </Provider>
     );
 
-    fireEvent.click(await screen.findByText(/place order/i)); // Use findByText for async
+    await act(async () => {
+      fireEvent.click(await screen.findByText(/place order/i));
+    });
 
     await waitFor(() => {
       expect(screen.getByText(/cart is empty/i)).toBeInTheDocument();
