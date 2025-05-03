@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuthContext } from '../contexts/AuthContext';
 import { updateUserData, deleteUserAccount } from '../services/authService';
 import { useNavigate } from 'react-router-dom';
-import './styles/Profile.css';
+import '../assets/styles/main.css';
 
 const Profile: React.FC = () => {
   const { user, userData } = useAuthContext(); // Access auth context

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { getUserOrders, getOrderById } from '../services/orderService';
 import { useAuth } from '../hooks/useAuth';
-import './styles/OrderHistory.css';
+import '../assets/styles/main.css';
 
 const OrderHistory: React.FC = () => {
   const { user } = useAuth(); // Custom hook to get current authenticated user

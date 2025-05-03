@@ -8,7 +8,7 @@ import {
   migrateProductsFromAPI
 } from '../services/productService';
 import { Product } from '../utils/types';
-import './styles/Home.css';
+import '../assets/styles/main.css';
 
 const Home: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>(''); // Track selected category

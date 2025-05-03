@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { RootState, clearCart } from '../store';
 import { createOrder } from '../services/orderService';
 import { useAuth } from '../hooks/useAuth';
-import './styles/Checkout.css';
+import '../assets/styles/main.css';
 
 const Checkout: React.FC = () => {
   const { user } = useAuth();
