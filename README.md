@@ -15,7 +15,9 @@ Live at https://react-ecommerce-advanced.vercel.app/ !
 - ✅ React Query for caching and async handling
 - ✅ Admin panel for products
 - ✅ Checkout and Order History
-
+- ✅ Comprehensive testing suite
+      (Integration and unit tests for Cart, Home, Checkout components)
+  
 ---
 
 ## Getting Started
