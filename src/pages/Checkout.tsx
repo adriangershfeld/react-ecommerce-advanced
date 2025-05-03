@@ -1,4 +1,5 @@
-// src/pages/Checkout.tsx
+// Checkout page component for reviewing cart items and placing an order
+
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -15,48 +16,52 @@ const Checkout: React.FC = () => {
   
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  
-  // Calculate total amount
+
+  // Calculate the total price of all items in the cart
   const totalAmount = cartItems.reduce(
     (total, item) => total + item.price * item.quantity,
     0
   );
-  
-  // Handle order submission
+
+  // Triggered when the user submits the order
   const handleSubmitOrder = async () => {
+    // Prevent order placement if user is not logged in
     if (!user?.uid) {
       setError('You must be logged in to checkout');
       return;
     }
-    
+
+    // Prevent order placement if the cart is empty
     if (cartItems.length === 0) {
       setError('Your cart is empty');
       return;
     }
-    
+
     setIsSubmitting(true);
     setError(null);
-    
+
     try {
-      // Create order in Firestore
+      // Save order to backend (e.g. Firestore)
       await createOrder(user.uid, cartItems, totalAmount);
-      
-      // Clear cart after successful order
+
+      // Empty the cart after successful order
       dispatch(clearCart());
-      
-      // Redirect to order history
+
+      // Navigate to order history page to confirm success
       navigate('/order-history');
     } catch (err: any) {
+      // Show an error message if order submission fails
       setError(err.message || 'Failed to place order');
       setIsSubmitting(false);
     }
   };
-  
-  // Back to cart
+
+  // Navigate back to the cart page for changes
   const handleBackToCart = () => {
     navigate('/cart');
   };
-  
+
+  // Show fallback content if cart is empty before rendering the page
   if (cartItems.length === 0) {
     return (
       <div className="checkout-empty">
@@ -66,12 +71,14 @@ const Checkout: React.FC = () => {
       </div>
     );
   }
-  
+
   return (
     <div className="checkout-container">
       <h2>Checkout</h2>
+      {/* Show error message if any */}
       {error && <div className="error-message">{error}</div>}
-      
+
+      {/* Order Summary Section */}
       <div className="checkout-summary">
         <h3>Order Summary</h3>
         <div className="checkout-items">
@@ -81,6 +88,7 @@ const Checkout: React.FC = () => {
                 <img 
                   src={item.image} 
                   alt={item.title}
+                  // Fallback image in case original fails to load
                   onError={(e) => {
                     (e.target as HTMLImageElement).onerror = null;
                     (e.target as HTMLImageElement).src = 'https://via.placeholder.com/50';
@@ -94,18 +102,21 @@ const Checkout: React.FC = () => {
                   <span>Price: ${item.price.toFixed(2)}</span>
                 </div>
                 <div className="item-subtotal">
+                  {/* Show price for this item multiplied by quantity */}
                   Subtotal: ${(item.price * item.quantity).toFixed(2)}
                 </div>
               </div>
             </div>
           ))}
         </div>
-        
+
+        {/* Total Cost Display */}
         <div className="order-total">
           <h3>Total: ${totalAmount.toFixed(2)}</h3>
         </div>
       </div>
-      
+
+      {/* Action Buttons: Return or Submit */}
       <div className="checkout-actions">
         <button 
           className="back-button" 
@@ -118,6 +129,7 @@ const Checkout: React.FC = () => {
           onClick={handleSubmitOrder}
           disabled={isSubmitting}
         >
+          {/* Show loading state while submitting */}
           {isSubmitting ? 'Processing...' : 'Place Order'}
         </button>
       </div>

@@ -30,12 +30,12 @@ const Cart: React.FC = () => {
     navigate('/checkout');
   };
 
-  // Empty cart display
+  // Empty cart display - shows message and browse products button
   if (cartItems.length === 0) {
     return (
       <div className="cart-empty">
         <h2>Your Cart</h2>
-        <p>You haven’t added anything yet.</p>
+        <p>You haven't added anything yet.</p>
         <button 
           onClick={() => navigate('/')}
           className="continue-shopping-btn"
@@ -64,7 +64,7 @@ const Cart: React.FC = () => {
           />
           <div className="cart-item-details">
             <h3>{item.title}</h3>
-             {/* Quantity Selector */}
+             {/* Quantity Selector - allows changing item quantity (1-10) */}
             <div className="quantity-control">
               <label>Qty: </label>
               <select
@@ -75,14 +75,15 @@ const Cart: React.FC = () => {
                 }))}
                 className="quantity-select"
               >
+                {/* Generate options for quantities 1-10 */}
                 {Array.from({ length: 10 }, (_, i) => i + 1).map((num) => (
                   <option key={num} value={num}>{num}</option>
                 ))}
               </select> 
             </div>
-            {/* Price Calculation */}
+            {/* Price Calculation - displays item subtotal based on quantity */}
             <p>Subtotal: ${(item.price * item.quantity).toFixed(2)}</p>
-            {/* Remove item button (removeFromCart action) */}
+            {/* Remove item button - dispatches removeFromCart action */}
             <button
               onClick={() => dispatch(removeFromCart(item.id))}
               className="remove-btn"
@@ -93,17 +94,19 @@ const Cart: React.FC = () => {
         </div>
       ))}
 
-      {/* Cart summary and checkout section */}
+      {/* Cart summary and checkout section - displays totals and action buttons */}
       <div className="cart-summary">
         <h3>Items Total: {cartItems.reduce((total, item) => total + item.quantity, 0)}</h3>
         <h3>Order Total: ${totalPrice.toFixed(2)}</h3>
         <div className="cart-actions">
+          {/* Continue shopping button - returns to home page */}
           <button
             onClick={() => navigate('/')}
             className="continue-shopping-btn"
           >
             Keep Shopping
           </button>
+          {/* Checkout button - proceeds to checkout page */}
           <button
             onClick={handleCheckout}
             className="checkout-btn"

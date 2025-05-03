@@ -6,20 +6,21 @@ import { store } from '../store';
 import { clearCart, addToCart } from '../store';
 import Cart from './Cart';
 
-// Mock useNavigate
+// Mock the useNavigate hook from react-router-dom to test navigation functionality
 const mockNavigate = jest.fn();
 jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
-  useNavigate: () => mockNavigate,
+  ...jest.requireActual('react-router-dom'), // Keep original module functionality
+  useNavigate: () => mockNavigate, // Replace useNavigate with our mock function
 }));
 
 describe('Cart Page', () => {
   beforeEach(() => {
-    // Clear Redux state and reset mocks
+    // Reset the state and mocks before each test to ensure test isolation
     store.dispatch(clearCart());
     mockNavigate.mockReset();
   });
 
+  // Helper function to render the Cart component with necessary providers
   const renderCart = () =>
     render(
       <Provider store={store}>
@@ -29,12 +30,14 @@ describe('Cart Page', () => {
       </Provider>
     );
 
-  test('renders empty cart message', () => {
+  test('renders empty cart message when the cart contains no items', () => {
     renderCart();
-    expect(screen.getByText(/You haven’t added anything yet/i)).toBeInTheDocument(); // EVIL CURLY APOSTROPHE
+    // Verify the empty cart message is displayed correctly
+    expect(screen.getByText(/You haven't added anything yet/i)).toBeInTheDocument();
   });
 
-  test('renders cart items when cart is filled', () => {
+  test('renders cart items when cart is filled with products', () => {
+    // Add a test product to the cart before rendering
     store.dispatch(
       addToCart({
         id: '1',
@@ -46,11 +49,13 @@ describe('Cart Page', () => {
 
     renderCart();
 
+    // Verify the product details and checkout button are displayed
     expect(screen.getByText(/Test Product/i)).toBeInTheDocument();
     expect(screen.getByText(/Checkout Now/i)).toBeInTheDocument();
   });
 
   test('navigates to checkout page when checkout button is clicked', () => {
+    // Add a test product to the cart before rendering
     store.dispatch(
       addToCart({
         id: '1',
@@ -62,13 +67,16 @@ describe('Cart Page', () => {
 
     renderCart();
     
+    // Find and click the checkout button
     const checkoutButton = screen.getByText(/Checkout Now/i);
     checkoutButton.click();
     
+    // Verify navigation occurred with the correct path
     expect(mockNavigate).toHaveBeenCalledWith('/checkout');
   });
 
   test('navigates to home page when "Keep Shopping" button is clicked', () => {
+    // Add a test product to the cart before rendering
     store.dispatch(
       addToCart({
         id: '1',
@@ -80,9 +88,11 @@ describe('Cart Page', () => {
 
     renderCart();
     
+    // Find and click the keep shopping button
     const keepShoppingButton = screen.getByText(/Keep Shopping/i);
     keepShoppingButton.click();
     
+    // Verify navigation occurred back to home page
     expect(mockNavigate).toHaveBeenCalledWith('/');
   });
 });

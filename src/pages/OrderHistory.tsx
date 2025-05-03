@@ -1,29 +1,28 @@
-// src/pages/OrderHistory.tsx
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { getUserOrders, getOrderById } from '../services/orderService';
 import { useAuth } from '../hooks/useAuth';
-import './OrderHistory.css';
+import './styles/OrderHistory.css';
 
 const OrderHistory: React.FC = () => {
-  const { user } = useAuth();
+  const { user } = useAuth(); // Custom hook to get current authenticated user
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
-  
-  // Fetch all user orders
+
+  // Fetch all orders for the current user (runs only if user is logged in)
   const { data: orders, isLoading, isError } = useQuery({
-    queryKey: ['userOrders', user?.uid],
+    queryKey: ['userOrders', user?.uid], // cache per user
     queryFn: () => user?.uid ? getUserOrders(user.uid) : Promise.resolve([]),
-    enabled: !!user?.uid
+    enabled: !!user?.uid // don't run until user is defined
   });
-  
-  // Fetch selected order details
+
+  // Fetch detailed data for selected order (only when an order is selected)
   const { data: selectedOrder } = useQuery({
     queryKey: ['orderDetails', selectedOrderId],
     queryFn: () => selectedOrderId ? getOrderById(selectedOrderId) : Promise.resolve(null),
     enabled: !!selectedOrderId
   });
 
-  // Format date for display
+  // Format a Date object into readable string (US locale)
   const formatDate = (date: Date): string => {
     return new Intl.DateTimeFormat('en-US', {
       year: 'numeric',
@@ -34,11 +33,12 @@ const OrderHistory: React.FC = () => {
     }).format(date);
   };
 
-  // Handle clicking on an order to view details
+  // Toggle order detail view
   const handleOrderClick = (orderId: string) => {
     setSelectedOrderId(orderId === selectedOrderId ? null : orderId);
   };
 
+  // Handle loading, error, and empty states
   if (isLoading) return <div>Loading order history...</div>;
   if (isError) return <div>Error loading orders</div>;
   if (!orders || orders.length === 0) return <div>No order history found</div>;
@@ -46,13 +46,13 @@ const OrderHistory: React.FC = () => {
   return (
     <div className="order-history-container">
       <h2>Your Order History</h2>
-      
+
       <div className="orders-list">
         {orders.map((order) => (
           <div 
             key={order.id} 
             className={`order-item ${selectedOrderId === order.id ? 'selected' : ''}`}
-            onClick={() => handleOrderClick(order.id)}
+            onClick={() => handleOrderClick(order.id)} // click to toggle order details
           >
             <div className="order-header">
               <div className="order-info">
@@ -61,10 +61,12 @@ const OrderHistory: React.FC = () => {
               </div>
               <div className="order-total">${order.totalAmount.toFixed(2)}</div>
             </div>
-            
+
+            {/* Show order details if this order is selected */}
             {selectedOrderId === order.id && selectedOrder && (
               <div className="order-details">
                 <h3>Order Details</h3>
+
                 <div className="order-items">
                   {selectedOrder.items.map((item, index) => (
                     <div key={index} className="order-product-item">
@@ -73,11 +75,13 @@ const OrderHistory: React.FC = () => {
                           src={item.image} 
                           alt={item.title}
                           onError={(e) => {
+                            // Fallback image in case of broken URL
                             (e.target as HTMLImageElement).onerror = null;
                             (e.target as HTMLImageElement).src = 'https://via.placeholder.com/50';
                           }}
                         />
                       </div>
+
                       <div className="product-info">
                         <h4>{item.title}</h4>
                         <div className="product-details">
@@ -89,13 +93,21 @@ const OrderHistory: React.FC = () => {
                     </div>
                   ))}
                 </div>
+
                 <div className="order-summary">
                   <div className="order-status">
-                    Status: <span className={`status-${selectedOrder.status}`}>{selectedOrder.status}</span>
+                    Status: 
+                    <span className={`status-${selectedOrder.status}`}>
+                      {selectedOrder.status}
+                    </span>
                   </div>
                   <div className="order-total-summary">
-                    <span>Total Items: {selectedOrder.items.reduce((sum, item) => sum + item.quantity, 0)}</span>
-                    <span>Total Amount: ${selectedOrder.totalAmount.toFixed(2)}</span>
+                    <span>
+                      Total Items: {selectedOrder.items.reduce((sum, item) => sum + item.quantity, 0)}
+                    </span>
+                    <span>
+                      Total Amount: ${selectedOrder.totalAmount.toFixed(2)}
+                    </span>
                   </div>
                 </div>
               </div>

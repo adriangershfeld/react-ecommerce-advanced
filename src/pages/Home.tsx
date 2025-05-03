@@ -11,18 +11,21 @@ import { Product } from '../utils/types';
 import './styles/Home.css';
 
 const Home: React.FC = () => {
-  const [selectedCategory, setSelectedCategory] = useState<string>('');
+  const [selectedCategory, setSelectedCategory] = useState<string>(''); // Track selected category
   const dispatch = useDispatch();
 
   useEffect(() => {
+    // Trigger product migration only once on component mount
     migrateProductsFromAPI().catch(console.error);
   }, []);
 
+  // Fetch all categories using React Query
   const { data: categories } = useQuery<string[]>({
-    queryKey: ['categories'],
+    queryKey: ['categories'], // Cached globally based on this key
     queryFn: getAllCategories
   });
 
+  // Fetch products based on selected category (updates when key changes)
   const {
     data: products,
     isLoading,
@@ -32,6 +35,7 @@ const Home: React.FC = () => {
     queryFn: () => getProductsByCategory(selectedCategory)
   });
 
+  // Handle "Add to Cart" button click
   const handleAddToCart = (product: Product) => {
     dispatch(addToCart({
       id: product.id,
@@ -44,10 +48,12 @@ const Home: React.FC = () => {
     }));
   };
 
+  // Display loading state while fetching products
   if (isLoading) {
     return <div className="home-container">Loading products…</div>;
   }
 
+  // Display error if product fetch fails
   if (error) {
     return (
       <div className="home-container">
@@ -58,6 +64,7 @@ const Home: React.FC = () => {
 
   return (
     <div className="home-container">
+      {/* Category dropdown for filtering */}
       <select
         className="category-filter"
         value={selectedCategory}
@@ -73,6 +80,7 @@ const Home: React.FC = () => {
         ))}
       </select>
 
+      {/* Product list */}
       <div className="product-grid">
         {products?.map((product: Product) => (
           <div key={product.id} className="product-card">
@@ -80,6 +88,7 @@ const Home: React.FC = () => {
               src={product.image}
               alt={product.title}
               onError={(e) => {
+                // Fallback in case image fails to load
                 (e.target as HTMLImageElement).onerror = null;
                 (e.target as HTMLImageElement).src =
                   'https://via.placeholder.com/200';
@@ -89,15 +98,17 @@ const Home: React.FC = () => {
             <h3>{product.title}</h3>
             <p>${product.price.toFixed(2)}</p>
 
+            {/* Display short description if available */}
             {product.description && (
               <p
-               className="description"
-               data-full={product.description}
-               >
+                className="description"
+                data-full={product.description} // Optional full description reference
+              >
                 {product.description.slice(0, 128)}…
               </p>
             )}
 
+            {/* Conditionally show rating info */}
             {product.rating && (
               <p className="rating">
                 Rating: {product.rating.rate}/5 ({product.rating.count} reviews)
