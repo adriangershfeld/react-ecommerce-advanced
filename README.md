@@ -11,13 +11,22 @@ Live at https://react-ecommerce-advanced.vercel.app/ !
 - ✅ Firebase Authentication (Register, Login, Logout)
 - ✅ Firestore integration for user profiles
 - ✅ Product display (fetched from Firestore)
+
 - ✅ Shopping cart with Redux
 - ✅ React Query for caching and async handling
 - ✅ Admin panel for products
 - ✅ Checkout and Order History
-- ✅ Comprehensive testing suite
-      (Integration and unit tests for Cart, Home, Checkout components)
-  
+
+- ✅ Comprehensive Documentation
+- ✅ Comprehensive code commenting for clarity and maintainability
+- ✅ Comprehensive test coverage:
+  - **Integration Tests**:
+    - Cart component (Redux + Routing) - tests cart state persistence, checkout navigation, and empty state behavior
+    - Checkout flow (Cart integration + Form submission)
+  - **Unit Tests**:
+    - Home component (Product listing, error states, React Query interactions)
+    - Individual utility functions
+
 ---
 
 ## Getting Started
@@ -40,7 +49,3 @@ Live at https://react-ecommerce-advanced.vercel.app/ !
 
 ## Some queries may require Firestore indexes. If you encounter errors,
 ## check the Firebase/Browser Console and set up the required indexes
-
-
-## To-Do
-- Thorough comments and documentation
