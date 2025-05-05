@@ -41,11 +41,6 @@ Live at https://react-ecommerce-advanced.vercel.app/ !
 
 1. Clone this repo.
 2. Run `npm install` to install dependencies.
-3. Create a `firebaseConfig.ts` file inside `src/` and export:
-   ```ts
-   export const firebaseConfig = { /* your firebase config */ };
-   export const auth = getAuth(app);
-   export const db = getFirestore(app);
 
 ## Some queries may require Firestore indexes. If you encounter errors,
 ## check the Firebase/Browser Console and set up the required indexes
