@@ -14,7 +14,8 @@ import { useQuery } from '@tanstack/react-query';
 jest.mock('../services/productService', () => ({
   getAllCategories: jest.fn(),
   getProductsByCategory: jest.fn(),
-  migrateProductsFromAPI: jest.fn()
+  migrateProductsFromAPI: jest.fn(),
+  getAllProducts: jest.fn(() => Promise.resolve([])), // Mocking getAllProducts to return an empty array
 }));
 
 // Mocking the functions allows us to test the component without using actual API calls
