@@ -13,17 +13,22 @@ describe('Checkout Page', () => {
     store.dispatch(clearCart());
   });
 
-  // Helper function to render the Checkout component with router setup
+  // Helper function wraps the Checkout component with Redux store context (useSelector, useDispatch)
   const renderWithRouter = () =>
     render(
       <Provider store={store}>
-        <MemoryRouter initialEntries={['/checkout']}>
+        <MemoryRouter initialEntries={['/checkout']}> 
           <Routes>
             <Route path="/checkout" element={<Checkout />} />
           </Routes>
         </MemoryRouter>
       </Provider>
     );
+    // Configures MemoryRouter with initial URL path '/checkout', sets up a single Route for '/checkout'
+    // Simulates navigation to checkout page
+
+  // Checkout is not rendered directly here to avoid mocking useNavigate etc
+  // Instead, we use MemoryRouter to simulate the routing environment and test in isolation
 
   test('renders empty cart message when there are no items in cart', () => {
     renderWithRouter();

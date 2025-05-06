@@ -15,10 +15,10 @@ jest.mock('react-router-dom', () => ({
 
 describe('Cart Page', () => {
   beforeEach(() => {
-    // Reset the state and mocks before each test to ensure test isolation
-    store.dispatch(clearCart());
-    mockNavigate.mockReset();
-  });
+    // Reset the state and mocks before each test to ensure test isolation (each test runs independently)
+    store.dispatch(clearCart()); // Clears the cart in Redux store for a clean starting state
+    mockNavigate.mockReset(); // Resets the navigation mock to clear any previous calls
+  }); 
 
   // Helper function to render the Cart component with necessary providers
   const renderCart = () =>
@@ -28,8 +28,10 @@ describe('Cart Page', () => {
           <Cart />
         </MemoryRouter>
       </Provider>
-    );
-
+    );  // Provider connects the component to Redux
+        // MemoryRouter simulates URL routing environment
+        // This avoids duplicating setup code across multiple tests
+        
   test('renders empty cart message when the cart contains no items', () => {
     renderCart();
     // Verify the empty cart message is displayed correctly
