@@ -23,6 +23,12 @@ jest.mock('../services/productService', () => ({
 // Mock useQuery to simulate different data-fetching states
 jest.mock('@tanstack/react-query', () => ({
   useQuery: jest.fn()
+    // Default mock implementation
+    .mockImplementation(() => ({ 
+      data: [], 
+      isLoading: false, 
+      error: null 
+    }))
 }));
 
 // Mocking the useQuery hook allows us to simulate loading, error, and success states
@@ -37,11 +43,14 @@ describe('Home Component', () => {
 
     // Ensure migrateProductsFromAPI always resolves cleanly
     (productService.migrateProductsFromAPI as jest.Mock).mockResolvedValue(undefined);
+    
+    // Default mock for Firestore products check
+    (productService.getAllProducts as jest.Mock).mockResolvedValue([]);
   });
 
-// migrateProductsFromAPI is called as a side effect in the Home component.
-// Because the actual return value is not used in the tests to avoid API calls
-// we satisfy the contract by resolving it with an empty value
+  // migrateProductsFromAPI is called as a side effect in the Home component.
+  // Because the actual return value is not used in the tests to avoid API calls
+  // we satisfy the contract by resolving it with an empty value
 
   test('renders loading state initially', () => {
     // Simulate categories loaded but products still loading
@@ -94,6 +103,9 @@ describe('Home Component', () => {
       }
     ]); // getProductsByCategory returns a test product
 
+    // Simulate Firestore has existing products to prevent migration
+    (productService.getAllProducts as jest.Mock).mockResolvedValueOnce([{ id: 'existing' }]);
+
     // Simulate successful data fetch via useQuery
     (useQuery as jest.Mock)
       .mockImplementationOnce(() => ({ data: ['Electronics'], isLoading: false, error: null })) // Categories
@@ -136,5 +148,28 @@ describe('Home Component', () => {
     const state = store.getState();
     expect(state.cart.items).toHaveLength(1); // Checks cart contains 1 item
     expect(state.cart.items[0].title).toBe('Prod 1'); // Validates item title matches the test product
+  });
+
+  test('triggers product migration when Firestore is empty', async () => {
+    // Simulate empty Firestore products collection
+    (productService.getAllProducts as jest.Mock).mockResolvedValueOnce([]);
+
+    // Mock useQuery responses for component stability
+    (useQuery as jest.Mock)
+      .mockImplementationOnce(() => ({ data: [], isLoading: false })) // Categories
+      .mockImplementationOnce(() => ({ data: [], isLoading: false })); // Products
+
+    render(
+      <Provider store={store}>
+        <MemoryRouter>
+          <Home />
+        </MemoryRouter>
+      </Provider>
+    );
+
+    // Verify migration was triggered
+    await waitFor(() => {
+      expect(productService.migrateProductsFromAPI).toHaveBeenCalled();
+    });
   });
 });
