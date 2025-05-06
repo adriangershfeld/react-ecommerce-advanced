@@ -5,7 +5,8 @@ import { addToCart } from '../store';
 import {
   getProductsByCategory,
   getAllCategories,
-  migrateProductsFromAPI
+  migrateProductsFromAPI,
+  getAllProducts
 } from '../services/productService';
 import { Product } from '../utils/types';
 import '../assets/styles/main.css';
@@ -15,10 +16,22 @@ const Home: React.FC = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // Trigger product migration only once on component mount
-    migrateProductsFromAPI().catch(console.error);
+    const checkAndMaybeMigrate = async () => {
+      // Get all existing products from Firestore
+      const existingProducts = await getAllProducts();
+      console.log(`[Home] Found ${existingProducts.length} products in Firestore`);
+  
+      // Only run the migration if Firestore is empty
+      if (existingProducts.length === 0) {
+        console.log('[Home] No products in Firestore, migrating from API...');
+        await migrateProductsFromAPI();
+      }
+    };
+  
+    // Run the check on first component mount
+    checkAndMaybeMigrate();
   }, []);
-
+  
   // Fetch all categories using React Query
   const { data: categories } = useQuery<string[]>({
     queryKey: ['categories'], // Cached globally based on this key
