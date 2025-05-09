@@ -1,43 +1,97 @@
-# React E-commerce Advanced: Testing & Firestore Migration
+# React E-commerce Advanced: Testing & Deployment
 
-## Firestore Migration Strategy
+## 1. Firestore Migration Implementation
 
-### Two-Phase Migration Approach:
-- **Detection Phase:** Checks for existing data in Firestore before triggering migration
-- **Migration Phase:** Seeds Firestore with initial product data from external API
+The application features a two-phase approach for seeding the Firestore database:
 
-### Implementation Details:
-- [Home.tsx (52-64)](https://github.com/adriangershfeld/react-ecommerce-advanced/blob/main/src/pages/Home.tsx#L52-L64) - Component-level migration trigger
-- [productService.ts (115-132)](https://github.com/adriangershfeld/react-ecommerce-advanced/blob/main/src/services/productService.ts#L115-L132) - Migration utility function
+- **Detection Phase:** Checks for existing products in Firestore
+- **Migration Phase:** Seeds initial product data from external API when needed
 
-## Testing Implementation
+Key implementation points:
+- Home component checks for empty Firestore on mount (`useEffect`)
+- Product service handles the API fetch and batch document creation
+- Error handling prevents duplicate migrations
 
-### Home Component Tests
+## 2. Testing Implementation
 
-- **Test Setup:** [Home.test.tsx (13-29)](https://github.com/adriangershfeld/react-ecommerce-advanced/blob/main/src/pages/Home.test.tsx#L13-L29) - Mocks for Firebase services and React Query
-- **Migration Testing:** [Home.test.tsx (132-144)](https://github.com/adriangershfeld/react-ecommerce-advanced/blob/main/src/pages/Home.test.tsx#L132-L144) - Verifies Firestore migration is triggered when empty
-- **Loading States:** [Home.test.tsx (45-68)](https://github.com/adriangershfeld/react-ecommerce-advanced/blob/main/src/pages/Home.test.tsx#L45-L68) - Tests UI for loading, error, and success states
+### Jest & Testing Library Setup
 
-### Authentication Testing
+- Global mocks for Firebase Auth and Firestore in jest.setup.ts
+- Environment variables mocking for Vite compatibility
+- Custom test utilities for common rendering patterns
 
-- **Authentication Mocking:** [jest.setup.ts (22-35)](https://github.com/adriangershfeld/react-ecommerce-advanced/blob/main/jest.setup.ts#L22-L35) - Global Firebase auth mocks
-- **Protected Routes:** [ProtectedRoute.tsx (10-27)](https://github.com/adriangershfeld/react-ecommerce-advanced/blob/main/src/components/ProtectedRoute.tsx#L10-L27) - Component that enforces authentication
-- **Admin Access Control:** [AdminRoute.tsx (12-29)](https://github.com/adriangershfeld/react-ecommerce-advanced/blob/main/src/components/AdminRoute.tsx#L12-L29) - Component that enforces admin privileges
+### Component Tests
 
-### Redux Integration Tests
+#### 1. Home Component Tests
 
-- **Store Setup:** [Cart.test.tsx (13-26)](https://github.com/adriangershfeld/react-ecommerce-advanced/blob/main/src/pages/Cart.test.tsx#L13-L26) - Configures Redux store and navigation mocks
-- **Navigation Testing:** [Cart.test.tsx (84-95)](https://github.com/adriangershfeld/react-ecommerce-advanced/blob/main/src/pages/Cart.test.tsx#L84-L95) - Validates navigation when checkout is clicked
-- **State Management:** [store.ts (9-55)](https://github.com/adriangershfeld/react-ecommerce-advanced/blob/main/src/store.ts#L9-L55) - Cart state implementation with Redux Toolkit
+- Tests loading, error, and success states
+- Verifies Firestore migration is triggered when needed: `expect(migrateProductsFromAPI).toHaveBeenCalled()`
+- Validates product rendering and cart integration
 
-## CI/CD Integration
+#### 2. Authentication Tests
 
-- **Local Testing:** [package.json (scripts)](https://github.com/adriangershfeld/react-ecommerce-advanced/blob/main/package.json#L7-L15) - Commands for running tests locally
-- **Test Configuration:** [jest.config.ts (3-25)](https://github.com/adriangershfeld/react-ecommerce-advanced/blob/main/jest.config.ts#L3-L25) - Jest setup for TypeScript and mock handling
-- **CI Pipeline:** [main.yml (3-48)](https://github.com/adriangershfeld/react-ecommerce-advanced/blob/main/.github/workflows/main.yml#L3-L48) - GitHub Actions that run tests before deployment
+- Validates protected routes behavior
+- Tests admin access control
+- Verifies auth state management through custom hook tests
 
-## Testing Challenges & Solutions
+#### 3. Cart & Checkout Tests
 
-- **Auth State:** [useAuth.ts (13-45)](https://github.com/adriangershfeld/react-ecommerce-advanced/blob/main/src/hooks/useAuth.ts#L13-L45) - Custom hook for Firebase Auth state management
-- **Asynchronous Testing:** [Home.test.tsx (98-116)](https://github.com/adriangershfeld/react-ecommerce-advanced/blob/main/src/pages/Home.test.tsx#L98-L116) - Using waitFor for async assertions
-- **Environment Variables:** [jest.setup.ts (40-52)](https://github.com/adriangershfeld/react-ecommerce-advanced/blob/main/jest.setup.ts#L40-L52) - Mocking import.meta.env for Vite compatibility
+- Tests Redux state management with mock store
+- Validates navigation between cart and checkout
+- Verifies order submission with Firestore mocks
+
+## 3. CI/CD Pipeline
+
+### GitHub Actions Workflow
+
+- Automated testing on every push and pull request
+- Deployment to Vercel only after successful tests
+- Environment variable handling through Vercel integration
+
+### NPM Scripts Integration
+
+- Dedicated test commands for local and CI environments
+- Watch mode for development testing
+- Reporting configuration for GitHub Actions integration
+
+## 4. Key Features Implementation
+
+### Authentication & Authorization
+
+- Firebase Authentication for user management
+- Role-based access control (admin vs. regular users)
+- Protected routes with redirect behavior
+
+### State Management
+
+- Redux for cart state with persistence
+- React Query for server state and caching
+- Custom hooks for auth state
+
+### Error Handling
+
+- Comprehensive try/catch blocks throughout the codebase
+- Fallback UI states for loading/error conditions
+- Form validation with user feedback
+
+### API Integration
+
+- Firestore for data persistence
+- External API integration (FakeStore)
+- Batch operations for performance
+
+### User Experience
+
+- Responsive design across device sizes
+- Graceful degradation for network issues
+- Progressive enhancement with meaningful feedback
+
+## 5. Test Coverage Summary
+
+| Component       | Unit Tests | Integration Tests | Mocks Used           |
+|-----------------|------------|-------------------|----------------------|
+| Home            | 4          | 1                 | Firebase, React Query|
+| Cart            | 2          | 2                 | Navigation, Redux    |
+| Authentication  | 3          | 1                 | Firebase Auth        |
+| Checkout        | 2          | 1                 | Order Service        |
+| Product Service | 3          | -                 | Firestore            |
