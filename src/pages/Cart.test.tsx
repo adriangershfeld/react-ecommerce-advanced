@@ -47,7 +47,7 @@ describe('Cart Page', () => {
         price: 10,
         image: 'test.jpg'
       })
-    );
+    ); // match formatting in test products 
 
     renderCart();
 
