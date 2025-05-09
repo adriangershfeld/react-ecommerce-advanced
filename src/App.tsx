@@ -22,8 +22,6 @@ import AdminProducts from './components/admin/AdminProducts';
 import AdminOrders from './components/admin/AdminOrders'; // Import AdminOrders
 import AdminRoute from './components/AdminRoute';
 
-import './App.css';
-
 // Initialize React Query client
 const queryClient = new QueryClient();
 

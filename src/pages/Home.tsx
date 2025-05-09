@@ -61,6 +61,24 @@ const Home: React.FC = () => {
     }));
   };
 
+  const truncateDescription = (text: string) => {
+    if (text.length <= 150) return text;
+    
+    // Find the last complete sentence within first 150 chars
+    const partialText = text.substring(0, 150);
+    const sentenceBreak = /[.!?](?:\s|$)/;
+    const sentences = partialText.split(sentenceBreak);
+    
+    // If no sentence breaks found, just truncate at word boundary
+    if (sentences.length <= 1) {
+      const lastSpace = partialText.lastIndexOf(' ');
+      return lastSpace > 0 ? text.substring(0, lastSpace) + '...' : partialText + '...';
+    }
+    
+    // Rejoin all but the last (potentially incomplete) sentence
+    return sentences.slice(0, -1).join('. ') + '.';
+  };
+
   // Display loading state while fetching products
   if (isLoading) {
     return <div className="home-container">Loading products…</div>;
@@ -117,7 +135,7 @@ const Home: React.FC = () => {
                 className="description"
                 data-full={product.description} // Optional full description reference
               >
-                {product.description.slice(0, 128)}…
+                {truncateDescription(product.description)}
               </p>
             )}
 
