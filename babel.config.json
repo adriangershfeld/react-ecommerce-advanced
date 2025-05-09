@@ -5,3 +5,5 @@
     "@babel/preset-typescript"
   ]
 }
+
+// Handles JavaScript/TypeScript transpilation, JSX transformation, and browser compatibility

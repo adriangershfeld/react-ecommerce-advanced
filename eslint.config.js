@@ -26,3 +26,5 @@ export default tseslint.config(
     },
   },
 )
+
+// TypeScript-specific rules and React hooks validation
